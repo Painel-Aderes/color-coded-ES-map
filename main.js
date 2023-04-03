@@ -25,18 +25,19 @@ fetch('./ES.json').then(r => r.json()).then(r => {
       stateArray.push([r.features[i].geometry.coordinates[0][j][1], r.features[i].geometry.coordinates[0][j][0]]);
     }
 
-    let colorsArray = ['#f44336', '#e81e63', '#9c27b0', '#673ab7', '#3f51b5', '#2196f3', '#03a9f4', '#00bcd4', '#009688', '#4caf50', '#8bc34a', '#cddc39', '#ffeb3b', '#ffc107', '#ff9800', '#ff5722', '#795548', '#9e9e9e', '#607d8b'];
+    // let colorsArray = ['#f44336', '#e81e63', '#9c27b0', '#673ab7', '#3f51b5', '#2196f3', '#03a9f4', '#00bcd4', '#009688', '#4caf50', '#8bc34a', '#cddc39', '#ffeb3b', '#ffc107', '#ff9800', '#ff5722', '#795548', '#9e9e9e', '#607d8b'];
 
-    let randomColor = colorsArray[Math.floor(Math.random() * colorsArray.length)];
+    // let randomColor = colorsArray[Math.floor(Math.random() * colorsArray.length)];
 
-    let stateStyle = {
-      fillColor: randomColor,
-      fillOpacity: 0.2,
-      color: randomColor,
-      weight: 1
-    };
+    // let stateStyle = {
+    //   fillColor: randomColor,
+    //   fillOpacity: 0.2,
+    //   color: randomColor,
+    //   weight: 1
+    // };
 
-    let state = L.polygon(stateArray).setStyle(stateStyle);
+    let state = L.polygon(stateArray);
+    state.setStyle({fillColor: '#00ff', fillOpacity: 0.5, color:'#202020', weight: 1});
     state.bindPopup(popupContent).addTo(map);
     allStates.push(state);
 
@@ -56,6 +57,8 @@ function pullVisibleStates() {
     let isInBounds = bounds.contains(each._latlngs);
 
     if (isInBounds) {
+      each.setStyle({fillColor: '#00ff'});
+
       let itemVisivel = allStates.find(estado =>
         estado._popup._content === each._popup._content);
 
@@ -68,7 +71,13 @@ function pullVisibleStates() {
 
       let cleanedVisibleStates = visibleStates.filter(onlyUnique);
 
-      console.log(cleanedVisibleStates);
+      // console.log(cleanedVisibleStates);
+
+      // console.log(itemVisivel);
+    } else {
+      each.setStyle({fillColor: '#202020'});
+
+
     }
   });
 }
