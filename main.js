@@ -4,15 +4,57 @@ const map = L.map('map', {
   center: [-19.5, -40.7],
   zoom: 8,
   minZoom: 1,
-  maxZoom: 12,
+  maxZoom: 9,
 });
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  maxZoom: 12,
-  attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  maxZoom: 9,
 }).addTo(map);
 
 let allStates = [];
+
+function clickZoom(e, list) {
+  // allStates.forEach(each => {
+  //   each.setStyle({ fillColor: '#00ff' });
+  // });
+
+  // let polygonCenter = e.target.getBounds().getCenter();
+
+  // map.setView(polygonCenter, 9);
+
+  // e.target.setStyle({ fillColor: '#e81e63' });
+
+
+  // allStates.forEach(each => {
+  //   each.setStyle({ fillColor: '#00ff' });
+  // });
+
+  // let polygonCenter = e.target.getBounds().getCenter();
+  // map.setView(polygonCenter, 9);
+
+  // setTimeout(() => {
+  //   e.target.setStyle({ fillColor: '#e81e63' });
+  // }, 600);
+
+  list.forEach(each => {
+    each.classList.remove('clicked');
+  });
+
+  e.classList.add('clicked');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    let allPaths = document.querySelectorAll('path.leaflet-interactive');
+    
+    allPaths.forEach(e => {
+      e.addEventListener('click', event => {
+        clickZoom(event.currentTarget, allPaths);
+      });
+    });
+
+  }, 1200);
+});
 
 fetch('./ES.json').then(r => r.json()).then(r => {
   for (let i = 0; i < r.features.length; i++) {
@@ -25,22 +67,10 @@ fetch('./ES.json').then(r => r.json()).then(r => {
       stateArray.push([r.features[i].geometry.coordinates[0][j][1], r.features[i].geometry.coordinates[0][j][0]]);
     }
 
-    // let colorsArray = ['#f44336', '#e81e63', '#9c27b0', '#673ab7', '#3f51b5', '#2196f3', '#03a9f4', '#00bcd4', '#009688', '#4caf50', '#8bc34a', '#cddc39', '#ffeb3b', '#ffc107', '#ff9800', '#ff5722', '#795548', '#9e9e9e', '#607d8b'];
-
-    // let randomColor = colorsArray[Math.floor(Math.random() * colorsArray.length)];
-
-    // let stateStyle = {
-    //   fillColor: randomColor,
-    //   fillOpacity: 0.2,
-    //   color: randomColor,
-    //   weight: 1
-    // };
-
     let state = L.polygon(stateArray);
-    state.setStyle({fillColor: '#00ff', fillOpacity: 0.5, color:'#202020', weight: 1});
+    state.setStyle({ fillColor: '#00ff', fillOpacity: 0.5, color: '#202020', weight: 1 });
     state.bindPopup(popupContent).addTo(map);
     allStates.push(state);
-
   }
 });
 
@@ -57,7 +87,7 @@ function pullVisibleStates() {
     let isInBounds = bounds.contains(each._latlngs);
 
     if (isInBounds) {
-      each.setStyle({fillColor: '#00ff'});
+      each.setStyle({ fillColor: '#00ff' });
 
       let itemVisivel = allStates.find(estado =>
         estado._popup._content === each._popup._content);
@@ -69,15 +99,9 @@ function pullVisibleStates() {
 
       visibleStates.push(name);
 
-      let cleanedVisibleStates = visibleStates.filter(onlyUnique);
-
-      // console.log(cleanedVisibleStates);
-
-      // console.log(itemVisivel);
+      // let cleanedVisibleStates = visibleStates.filter(onlyUnique);
     } else {
-      each.setStyle({fillColor: '#202020'});
-
-
+      each.setStyle({ fillColor: '#202020' });
     }
   });
 }

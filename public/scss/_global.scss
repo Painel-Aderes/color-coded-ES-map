@@ -10,6 +10,10 @@ $inter: 'Inter', sans-serif;
     font-family: $narrow;
 }
 
+path.clicked {
+    fill: #ff0000 !important;
+}
+
 body {
     font-size: 16px;
     font-family: $inter;
